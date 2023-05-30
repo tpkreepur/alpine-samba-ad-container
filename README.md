@@ -1,35 +1,37 @@
-## Samba 4 AD container based on Alpine Linux
+# Samba 4 AD container based on Alpine Linux
 
-### Credits
+## Credits
+
 Some parts are collected from:
-* https://github.com/Osirium/docker-samba-ad-dc
-* https://github.com/myrjola/docker-samba-ad-dc
-* https://wiki.samba.org/index.php/Samba,_Active_Directory_%26_LDAP
 
+* <https://github.com/Osirium/docker-samba-ad-dc>
+* <https://github.com/myrjola/docker-samba-ad-dc>
+* <https://wiki.samba.org/index.php/Samba,_Active_Directory_%26_LDAP>
 
-### Usage
+## Usage
 
 Without any config and thrown away when terminated:
-```
+
+```shell
 docker run -it --rm tkaefer/alpine-samba-ad-container
 ```
 
-### Environment variables
+## Environment variables
 
 Environment variables are controlling the way how this image behaves therefore please check this list an explanation:
 
-| Variabale | Explanation | Default |
+| Variable | Explanation | Default |
 | --- | --- | --- |
 | `SAMBA_DOMAIN` | The domain name used for Samba AD | `SAMDOM` |
 | `SAMBA_REALM` | The realm for authentication (eg. Kerberos) | `SAMDOM.EXAMPLE.COM` |
-| `LDAP_ALLOW_INSECURE` | Allow insecure LDAP setup, by using unecrypted password. *Please use only in debug and non productive setups.* | `false` |
+| `LDAP_ALLOW_INSECURE` | Allow insecure LDAP setup, by using unecrypted password. _Please use only in debug and non productive setups._ | `false` |
 | `SAMBA_ADMIN_PASSWORD` | The samba admin user password  | set to `$(pwgen -cny 10 1)` |
 | `KERBEROS_PASSWORD` | The kerberos password  | set to `$(pwgen -cny 10 1)` |
 
-
-### Use existing data
+## Use existing data
 
 Using (or reusing data) is done by providing
+
 * `/etc/samba/smb.conf`
 * `/etc/krb5.conf`
 * `/usr/lib/samba/`
@@ -37,10 +39,11 @@ Using (or reusing data) is done by providing
 
 as volumes to the docker container.
 
-### Example
+## Example
 
-#### Plain docker
-```
+### Plain docker
+
+```shell
 touch /tmp/krb-conf/krb5.conf
 
 docker run -d -e SAMBA_DOMAIN=TEST -e SAMBA_REALM=TEST.MYDOMAIN.COM -v /tmp/smb-conf:/etc/samba -v /tmp/krb-conf/krb5.conf:/etc/krb5.conf -v /tmp/smb-data:/var/lib/samba -v /tmp/krb-data:/var/lib/krb5kdc --name smb4ad tkaefer/alpine-samba-ad-container
@@ -48,15 +51,17 @@ docker run -d -e SAMBA_DOMAIN=TEST -e SAMBA_REALM=TEST.MYDOMAIN.COM -v /tmp/smb-
 
 For details how to store data in directories, containers etc. please check the Docker documentation for details.
 
-#### Docker compose
+### Docker compose
 
-Get the `docker-compose.yaml` [file from the github repo](https://github.com/tkaefer/alpine-samba-ad-container/blob/master/docker-compose.yaml).
+Get the `docker-compose.yaml` [file from the github repo](https://github.com/tpkreepur/alpine-samba-ad-container/blob/master/docker-compose.yaml).
 Copy it to an appropriate directory, do a `touch /tmp/krb-conf/krb5.conf` and run `docker-compose up -d` within that directory.
 
 Watch the logs via `docker-compose logs -f`.
 
 ## notes
+
 Create clean volumes
+
 ```bash
 if [ -d $HOME/tmp ]; then echo "Removing tmp dir"; rm -rf $HOME/tmp; fi; \
 echo "Creating tmp dir" \
@@ -69,6 +74,7 @@ echo "Creating tmp dir" \
 ```
 
 Run an instance
+
 ```bash
 docker volume create samba-data
 

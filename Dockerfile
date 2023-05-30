@@ -1,5 +1,4 @@
-FROM alpine:3.15
-MAINTAINER Tobias Kaefer tobias+dckrsmb@tkaefer.de
+FROM alpine:3.18
 
 ENV TERM=xterm-color
 RUN apk --update add \
@@ -35,14 +34,14 @@ RUN apk --update add \
 
 RUN pip3 install dnspython
 
-ADD kdb5_util_create.expect kdb5_util_create.expect
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ADD named.conf /etc/bind/named.conf
-ADD named.conf.options /etc/bind/named.conf.options
+COPY kdb5_util_create.expect kdb5_util_create.expect
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY named.conf /etc/bind/named.conf
+COPY named.conf.options /etc/bind/named.conf.options
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
-EXPOSE 22 53 389 88 135 139 138 445 464 3268 3269
+EXPOSE 53 389 88 135 139 138 445 464 3268 3269
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["app:start"]
